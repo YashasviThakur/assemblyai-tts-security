@@ -1,0 +1,42 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 820 452" font-family="ui-monospace,SFMono-Regular,Menlo,Consolas,monospace" font-size="15">
+  <rect x="0" y="0" width="820" height="452" rx="10" fill="#0d1117"/>
+  <rect x="0" y="0" width="820" height="36" rx="10" fill="#161b22"/>
+  <rect x="0" y="26" width="820" height="10" fill="#161b22"/>
+  <circle cx="22" cy="18" r="6" fill="#ff5f56"/><circle cx="42" cy="18" r="6" fill="#ffbd2e"/><circle cx="62" cy="18" r="6" fill="#27c93f"/>
+  <text x="410" y="23" text-anchor="middle" fill="#8b949e">round-trip proof · assemblyai-tts-security</text>
+
+  <!-- prompt -->
+  <text x="22" y="72" fill="#3fb950">$ <tspan fill="#c9d1d9">node probes/roundtrip.mjs</tspan><tspan fill="#8b949e">  # TTS → AssemblyAI's own STT</tspan>
+    <animate attributeName="opacity" dur="14s" repeatCount="indefinite" values="0;0;1;1;0" keyTimes="0;0;0.03;0.93;1"/></text>
+  <rect x="470" y="60" width="9" height="16" fill="#c9d1d9"><animate attributeName="opacity" values="1;0;1" dur="1.06s" repeatCount="indefinite"/></rect>
+
+  <!-- case 1: indian lakh -->
+  <text x="22" y="120" fill="#8b949e">[num_indian_lakh]  TEXT  <tspan fill="#d29922">"He paid 2,00,000 rupees."</tspan>
+    <animate attributeName="opacity" dur="14s" repeatCount="indefinite" values="0;0;1;1;0" keyTimes="0;0.063;0.093;0.93;1"/></text>
+  <text x="22" y="146" fill="#8b949e">     → STT heard   <tspan fill="#c9d1d9">"he paid </tspan><tspan fill="#f85149">two zero</tspan><tspan fill="#c9d1d9"> rupees"</tspan>  <tspan fill="#f85149" font-weight="bold">✗ magnitude destroyed</tspan>
+    <animate attributeName="opacity" dur="14s" repeatCount="indefinite" values="0;0;1;1;0" keyTimes="0;0.113;0.143;0.93;1"/></text>
+
+  <!-- case 2: western (control) -->
+  <text x="22" y="186" fill="#8b949e">[num_western]      TEXT  <tspan fill="#d29922">"He paid 200,000 rupees."</tspan>
+    <animate attributeName="opacity" dur="14s" repeatCount="indefinite" values="0;0;1;1;0" keyTimes="0;0.177;0.207;0.93;1"/></text>
+  <text x="22" y="212" fill="#8b949e">     → STT heard   <tspan fill="#c9d1d9">"he paid two hundred thousand rupees"</tspan>  <tspan fill="#3fb950" font-weight="bold">✓</tspan>
+    <animate attributeName="opacity" dur="14s" repeatCount="indefinite" values="0;0;1;1;0" keyTimes="0;0.227;0.257;0.93;1"/></text>
+
+  <!-- case 3: domain -->
+  <text x="22" y="252" fill="#8b949e">[phone_url]        TEXT  <tspan fill="#d29922">"...visit https://assemblyai.com/docs"</tspan>
+    <animate attributeName="opacity" dur="14s" repeatCount="indefinite" values="0;0;1;1;0" keyTimes="0;0.291;0.321;0.93;1"/></text>
+  <text x="22" y="278" fill="#8b949e">     → STT heard   <tspan fill="#c9d1d9">"...visit https ... </tspan><tspan fill="#f85149">assemblyi</tspan><tspan fill="#c9d1d9"> dot com..."</tspan>  <tspan fill="#f85149" font-weight="bold">✗ own domain mangled</tspan>
+    <animate attributeName="opacity" dur="14s" repeatCount="indefinite" values="0;0;1;1;0" keyTimes="0;0.341;0.371;0.93;1"/></text>
+
+  <!-- verdict line -->
+  <text x="22" y="322" fill="#8b949e">the API transcribes its own speech wrong — no listening required.
+    <animate attributeName="opacity" dur="14s" repeatCount="indefinite" values="0;0;1;1;0" keyTimes="0;0.40;0.43;0.93;1"/></text>
+
+  <!-- card -->
+  <g>
+    <rect x="22" y="356" width="776" height="72" rx="8" fill="#161b22" stroke="#30363d"/>
+    <text x="40" y="388" fill="#58a6ff" font-size="19" font-weight="bold">11 findings · proven by round-trip</text>
+    <text x="40" y="412" fill="#8b949e">AssemblyAI streaming TTS security &amp; reliability review — Hackathon #2</text>
+    <animate attributeName="opacity" dur="14s" repeatCount="indefinite" values="0;0;1;1;0" keyTimes="0;0.42;0.45;0.93;1"/>
+  </g>
+</svg>

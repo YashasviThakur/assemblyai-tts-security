@@ -10,6 +10,11 @@ transcribe the TTS audio with AssemblyAI's *own* STT, so the proof is the API
 contradicting itself, not our ears) — plus a set of negative (robust) results.
 Full writeup: **[FINDINGS.md](FINDINGS.md)**.
 
+![round-trip proof: TTS synthesizes text, AssemblyAI's own STT transcribes it back, and the number comes out wrong](demo/roundtrip.svg)
+
+*The clip above is the flagship finding, proven by round-trip. Run it yourself offline:
+`node demo/roundtrip-demo.mjs` (instant scoreboard) or live: `node --env-file=.env probes/roundtrip.mjs`.*
+
 ## Headline findings
 
 1. **Indian ₹ amounts spoken as gibberish** — `2,00,000` (two lakh) is synthesized as
@@ -24,6 +29,27 @@ Full writeup: **[FINDINGS.md](FINDINGS.md)**.
 5. **AssemblyAI's own domain is mangled** — `assemblyai.com` → "assemblyi dot com". (F11)
 6. **Validation asymmetry, control-char passthrough, segment gluing, misleading `voice_clone`
    error, info disclosure** — see report. (F5–F9)
+
+## Results scoreboard
+
+All 11 findings are reproducible; each row names the one-file script that demonstrates it.
+
+| # | Severity | Finding | Status | Repro |
+|---|----------|---------|--------|-------|
+| F10 | Medium | Indian lakh/crore grouping `2,00,000` spoken as "two zero" | ✅ | `probes/roundtrip2.mjs` |
+| F1 | Medium | `Terminate` bills text never flushed | ✅ | `probes/a_billing2.mjs` |
+| F2 | Medium | `Cancelled` reports `0 s` while session bills full cancelled audio | ✅ | `probes/a_billing.mjs` |
+| F4 | Medium | Non-deterministic `WordBoundaries` (~7% drop, no error) | ✅ | `probes/e4_quant.mjs` |
+| F11 | Low–Med | `assemblyai.com` → "assemblyi dot com" | ✅ | `probes/roundtrip.mjs` |
+| F5 | Low–Med | `voice`/`language` enforced at connect, ignored per-`Generate` | ✅ | `probes/c_info.mjs` |
+| F3 | Low | Usage counters (`chars` vs `audio_seconds`) can't be reconciled | ✅ | `probes/bcd_fuzz.mjs` |
+| F6 | Low | `Generate` segments concatenated with no separator | ✅ | `probes/a_billing.mjs` |
+| F7 | Low | Control chars (NUL/ANSI/BEL) pass through into `WordBoundaries` | ✅ | `probes/bcd_fuzz.mjs` |
+| F8 | Low | `voice_clone` error advertises a disabled feature | ✅ | `probes/c_info.mjs` |
+| F9 | Info | Parser exception + server version strings leaked | ✅ | `probes/bcd_fuzz.mjs` |
+
+Plus a **tested-and-robust** section (no `text` injection, no `flush_id` spoofing, clean type
+rejection) in [FINDINGS.md](FINDINGS.md).
 
 ## Run it
 

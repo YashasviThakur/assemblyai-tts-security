@@ -148,8 +148,18 @@ Identical request, same session parameters: WordBoundaries present 5/6, absent 1
 destabilising token here is the em-dash `—`; `e2_wb.mjs` shows the same string yielding full
 boundaries on one pass and none on another.
 
-**Impact.** ~1-in-6 utterances (for affected text) ship with no word timings and no error, so
-captions silently desync. **Suggested fix.** Always emit `WordBoundaries` when
+**Measured rate** (`probes/e4_quant.mjs 24` → `evidence/e4_quant.txt`): the same request
+24×:
+
+```
+RESULT: 1/24 runs dropped WordBoundaries = 4.2% failure; audio produced in 24/24 runs (no error on any).
+```
+
+Across both runs that is **2 of 30 identical requests (~7%)** that returned audio but no
+word timings, with no error on any.
+
+**Impact.** A measurable fraction of utterances (for affected text) ship with no word timings
+and no error, so captions silently desync. **Suggested fix.** Always emit `WordBoundaries` when
 `word_boundaries` is enabled (empty list if truly none), and make emission deterministic.
 
 ## F5 — `voice`/`language` validated at connect, silently ignored per-`Generate`  ·  Low–Medium

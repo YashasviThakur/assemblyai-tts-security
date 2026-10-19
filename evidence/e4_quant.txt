@@ -1,0 +1,4 @@
+F4 quantification: "The meeting is on 10/11/2026 re: Q4 — see fig. 2(a)."  (N=24)
+  run 22: NO WordBoundaries (audio_ms=5760)
+
+RESULT: 1/24 runs dropped WordBoundaries = 4.2% failure; audio produced in 24/24 runs (no error on any).
