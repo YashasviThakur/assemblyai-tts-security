@@ -5,24 +5,25 @@ text-to-speech endpoint `wss://streaming-tts.assemblyai.com/v1/ws`, built for
 **AssemblyAI online Hackathon #2** (Oct 15–23 2026), bug-report / security track.
 
 The endpoint shipped with no public docs. We probed it black-box with our own
-hackathon key and found **9 issues** — a billing-integrity cluster, a
-non-deterministic word-timestamp bug, input-sanitization and validation gaps —
-plus a set of negative (robust) results. Full writeup: **[FINDINGS.md](FINDINGS.md)**.
+hackathon key and found **11 issues** — two of them proven by round-trip (we
+transcribe the TTS audio with AssemblyAI's *own* STT, so the proof is the API
+contradicting itself, not our ears) — plus a set of negative (robust) results.
+Full writeup: **[FINDINGS.md](FINDINGS.md)**.
 
 ## Headline findings
 
-1. **`Terminate` bills un-flushed text** — buffer text, never `Flush`, `Terminate`:
-   you're still billed for synthesized audio you never requested. Only `Cancel`
-   discards a buffer.
-2. **Cancelled audio is billed but reported as `0` s** — `Cancelled.audio_duration_seconds`
-   is always `0` while the session bills the full cancelled utterance (19.84 s in our repro).
-3. **Non-deterministic `WordBoundaries`** — the *same* input intermittently returns no word
-   timings (~1/6) with audio and no error, silently breaking captions.
-4. **Validation asymmetry** — `voice`/`language` are rejected as connection params but
-   silently ignored as per-`Generate` overrides (English voice reads French, no error).
-5. **Control-char passthrough** — NUL / ANSI-escape / BEL flow verbatim into `WordBoundaries`
-   tokens (caption-injection risk).
-6. **Segment gluing, misleading `voice_clone` error, version/parser info disclosure** — see report.
+1. **Indian ₹ amounts spoken as gibberish** — `2,00,000` (two lakh) is synthesized as
+   **"two zero"**, `1,50,00,000` (1.5 crore) as **"one fifty zero"**; the same values in
+   Western grouping read correctly. Round-trip-proven. (F10)
+2. **`Terminate` bills un-flushed text** — buffer text, never `Flush`, `Terminate`: you're
+   still billed for synthesized audio you never requested. Only `Cancel` discards a buffer. (F1)
+3. **Cancelled audio is billed but reported as `0` s** — `Cancelled.audio_duration_seconds`
+   is always `0` while the session bills the full cancelled utterance (19.84 s in our repro). (F2)
+4. **Non-deterministic `WordBoundaries`** — the *same* input intermittently returns no word
+   timings with audio and no error, silently breaking captions. (F4)
+5. **AssemblyAI's own domain is mangled** — `assemblyai.com` → "assemblyi dot com". (F11)
+6. **Validation asymmetry, control-char passthrough, segment gluing, misleading `voice_clone`
+   error, info disclosure** — see report. (F5–F9)
 
 ## Run it
 

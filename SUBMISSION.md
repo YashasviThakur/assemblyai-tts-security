@@ -10,23 +10,26 @@ Paste-ready answers for the submission form: https://forms.gle/NtYDsi3bgqMDK29j9
 ## One-paragraph pitch
 
 AssemblyAI's streaming TTS endpoint shipped with zero public documentation, so we
-reverse-engineered its protocol by probing production with our own key and audited
-it for security and reliability. We report 9 issues, 6 of which we could not find
-in any of the three other public reverse-engineering efforts: a **billing-integrity
-cluster** (`Terminate` bills text you never flushed; `Cancelled` reports `0` seconds
-while the session bills the full cancelled audio; the two usage counters can't be
-reconciled), a **non-deterministic `WordBoundaries` bug** that silently drops word
-timings ~1 in 6 for affected inputs and breaks captioning, **control-character
-passthrough** into word tokens (caption-injection), and a **validation asymmetry**
-where `voice`/`language` are enforced at connect but silently ignored per-`Generate`.
-Every finding ships with a runnable one-file reproduction and captured output.
+reverse-engineered its protocol by probing production with our own key and audited it for
+security and reliability — then **proved the correctness bugs by round-trip**: we transcribe
+the TTS audio with AssemblyAI's *own* STT, so the evidence is the API contradicting itself,
+not our ears. We report 11 issues, most of which we could not find in any of the three other
+public reverse-engineering efforts: the TTS **speaks Indian ₹ amounts as gibberish**
+(`2,00,000` → "two zero", `1,50,00,000` → "one fifty zero", while Western grouping is fine);
+a **billing-integrity cluster** (`Terminate` bills text you never flushed; `Cancelled` reports
+`0` seconds while the session bills the full cancelled audio); a **non-deterministic
+`WordBoundaries` bug** that silently drops word timings and breaks captioning; plus
+control-char passthrough, validation asymmetry, and info disclosure. Every finding ships with
+a runnable one-file reproduction and captured output.
 
 ## Top 3 to highlight
 
-1. **`Terminate` implicitly flushes & bills un-flushed text** (Medium, billing).
-2. **Cancelled audio billed but reported as `0` seconds** (Medium, billing accounting).
-3. **Non-deterministic `WordBoundaries`** — identical input, timings present 5/6 runs,
-   absent 1/6, no error (Medium, reliability; breaks the word-timestamp feature's main use).
+1. **Indian lakh/crore amounts read as gibberish** (Medium, correctness; round-trip-proven,
+   isolated with a 5-case controlled comparison; huge India-market impact).
+2. **`Terminate` bills un-flushed text + `Cancelled` under-reports billed audio by the whole
+   cancelled utterance** (Medium, billing integrity).
+3. **Non-deterministic `WordBoundaries`** — identical input, word timings sometimes absent,
+   no error; measured failure rate in `evidence/e4_quant.txt` (Medium, reliability).
 
 ## Evidence
 
@@ -36,7 +39,9 @@ Every finding ships with a runnable one-file reproduction and captured output.
 
 ## Links to post (tag AssemblyAI)
 
-- LinkedIn / X draft: *"Spent the AssemblyAI TTS hackathon auditing their new,
-  undocumented streaming TTS WebSocket. Found a billing-integrity cluster (you can be
-  billed for audio you cancelled or never flushed) and a non-deterministic word-timestamp
-  bug that silently breaks captions. 9 findings, all with runnable repros. Report: <repo>"*
+- LinkedIn / X draft: *"For the @AssemblyAI TTS hackathon I audited their new, undocumented
+  streaming TTS WebSocket — and proved the bugs by round-trip (synthesize text, then transcribe
+  it back with AssemblyAI's own STT). The API speaks Indian ₹ amounts as gibberish: 2,00,000
+  comes out 'two zero', 1,50,00,000 'one fifty zero' — while Western grouping is fine. Plus a
+  billing-integrity cluster (you're billed for audio you cancelled or never flushed) and a
+  non-deterministic word-timestamp bug. 11 findings, all with runnable repros. Report: <repo>"*

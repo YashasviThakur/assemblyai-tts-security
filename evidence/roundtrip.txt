@@ -1,0 +1,30 @@
+
+[control_prose]
+  TEXT : The quick brown fox jumps over the lazy dog near the river bank.
+  STT  : the quick brown fox jumps over the lazy dog near the riverbank
+
+[otp_currency]
+  TEXT : Your OTP is 4096 and your balance is $1,234.56.
+  STT  : your otp is four thousand ninety six and your balance is one thousand two hundred thirty four dollars and fifty six cents
+
+[email_time]
+  TEXT : Email me at test.user+tag@sub.example.co.uk by 5:30 PM.
+  STT  : email me at test dot user plus tag at sub dot example dot co dot uk by five thirty p m
+
+[phone_url]
+  TEXT : Call +1 (415) 555-0137 or visit https://assemblyai.com/docs.
+  STT  : call plus one four one five five five five zero one three seven or visit https colon slash slash assemblyi dot com slash docs dot
+
+[date_abbrev]
+  TEXT : The meeting is on 10/11/2026 re: Q4 — see fig. 2(a).
+  STT  : the meeting is on october eleventh twenty twenty six re q four see fig two
+
+[indian_units]
+  TEXT : He paid Rs 2,00,000 for 3kg at 25 degrees C.
+  STT  : he paid rs two zero for three kilograms at twenty five degrees c
+
+[symbols]
+  TEXT : AI/ML & R&D cost ~50%, didn't it? Section 3.1(b).
+  STT  : ai ml and r and d cost fifty percent didn't it section three point one b
+
+wrote evidence/roundtrip.md

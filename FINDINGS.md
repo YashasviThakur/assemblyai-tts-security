@@ -5,7 +5,10 @@
 **Method:** black-box protocol probing against the production endpoint with our own
 hackathon API key, low request volume, no denial-of-service, no other accounts touched.
 All findings are reproducible with the scripts in [`probes/`](probes/); raw captured
-output is in [`evidence/`](evidence/).
+output is in [`evidence/`](evidence/). Correctness findings are proven by **round-trip**:
+we synthesize text, then transcribe the resulting audio with AssemblyAI's *own*
+speech-to-text — if the API hears something different from what was written, that is
+objective evidence, no listening required ([`evidence/roundtrip.md`](evidence/roundtrip.md)).
 
 The endpoint ships with **no public documentation** (the public FAQ even states AssemblyAI
 "does not offer standalone text-to-speech as a separate service"), so a protocol sketch is
@@ -24,6 +27,9 @@ node --env-file=.env probes/e3_flaky.mjs      # F4      (non-deterministic WordB
 node --env-file=.env probes/c_info.mjs        # F5, F8  (validation asymmetry, clone order)
 node --env-file=.env probes/bcd_fuzz.mjs      # F6, F7, F9 + negative results
 node --env-file=.env probes/e_pronounce.mjs   # normalization WAVs -> evidence/wav/
+node --env-file=.env probes/roundtrip.mjs     # F10, F11 (TTS -> STT round-trip proof)
+node --env-file=.env probes/roundtrip2.mjs    # F10 isolation (Indian vs Western grouping)
+node --env-file=.env probes/e4_quant.mjs 24   # F4 failure-rate measurement
 ```
 
 ---
@@ -32,6 +38,8 @@ node --env-file=.env probes/e_pronounce.mjs   # normalization WAVs -> evidence/w
 
 | # | Severity | Area | Finding | Novel? |
 |---|----------|------|---------|--------|
+| **F10** | **Medium** | Correctness | **Indian lakh/crore digit grouping (`2,00,000`) is spoken as "two zero"** — magnitude destroyed; round-trip-proven | yes |
+| F11 | Low–Med | Correctness | Named entities mangled: `assemblyai.com` → "assemblyi dot com" (own domain); round-trip-proven | yes |
 | F1 | **Medium** | Billing | `Terminate` implicitly flushes **and bills** text that was never flushed | yes |
 | F2 | **Medium** | Billing | `Cancelled.audio_duration_seconds` is always `0` while the session bills the full cancelled audio | yes¹ |
 | F3 | Low | Billing | `total_input_char_length` counts characters that produce no audio; the two usage counters can't be reconciled | yes |
@@ -222,6 +230,48 @@ feature-enabled first.
 - Error frames are sometimes emitted **twice** before close (C3).
 
 **Suggested fix.** Return generic parse errors; suppress the server version banner.
+
+## F10 — Indian lakh/crore digit grouping is read as gibberish  ·  Medium
+
+Numbers written with Indian digit grouping (lakh/crore: `2,00,000`, `1,50,00,000`) are
+synthesized with their magnitude destroyed, while the identical value in Western grouping
+or with no grouping reads correctly. Proven by round-trip: AssemblyAI's own STT transcribes
+the TTS audio and the number comes back wrong.
+
+**Repro** (`probes/roundtrip2.mjs` → `evidence/roundtrip_numbers.md`), raw STT of the TTS audio:
+
+| input text | STT heard in the TTS audio | correct? |
+|---|---|---|
+| `He paid 2,00,000 rupees.` (Indian, = 200000) | "he paid **two zero** rupees" | ❌ |
+| `He paid 1,50,00,000 rupees.` (Indian crore, = 15000000) | "he paid **one fifty zero** rupees" | ❌ |
+| `He paid 200,000 rupees.` (Western) | "he paid two hundred thousand rupees" | ✅ |
+| `He paid 200000 rupees.` (no grouping) | "he paid two hundred thousand rupees" | ✅ |
+| `He paid 15,000,000 rupees.` (Western) | "he paid fifteen million rupees" | ✅ |
+
+The original torture sentence shows the same collapse: `Rs 2,00,000` → `"rs two zero"`
+(`evidence/roundtrip.md`), and this is the token that scored word confidence **0.00** in
+`evidence/e_pronounce.txt`.
+
+**Impact.** Any India-facing voice product — fintech balances, billing, order totals,
+OTP-adjacent amounts — will speak a catastrophically wrong figure (₹200,000 → "two zero")
+with no error and no low-level signal other than a confidence score most clients never read.
+This is squarely in scope for TTS-1's stated goal of reading numbers accurately.
+**Suggested fix.** Normalize Indian digit grouping (and ideally support lakh/crore wording).
+
+## F11 — named entities (incl. AssemblyAI's own domain) are mangled  ·  Low–Medium
+
+**Repro** (`probes/roundtrip.mjs` → `evidence/roundtrip.md`):
+
+```
+TEXT : Call +1 (415) 555-0137 or visit https://assemblyai.com/docs.
+STT  : ...or visit https colon slash slash assemblyi dot com slash docs
+```
+
+`assemblyai` is spoken as **"assemblyi"** — the TTS drops a syllable from a domain name
+(its own). The phone digits round-trip correctly, so this is specifically an entity/URL
+pronunciation gap, again the exact class TTS-1 targets.
+**Suggested fix.** Add a spelling/spell-out path (or pronunciation dictionary) for URLs,
+domains, and unknown tokens.
 
 ---
 

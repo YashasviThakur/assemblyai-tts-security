@@ -1,0 +1,12 @@
+[num_indian_lakh] TEXT: He paid 2,00,000 rupees.
+         STT : he paid two zero rupees
+[num_western] TEXT: He paid 200,000 rupees.
+         STT : he paid two hundred thousand rupees
+[num_plain] TEXT: He paid 200000 rupees.
+         STT : he paid two hundred thousand rupees
+[num_indian_crore] TEXT: He paid 1,50,00,000 rupees.
+         STT : he paid one fifty zero rupees
+[num_western_big] TEXT: He paid 15,000,000 rupees.
+         STT : he paid fifteen million rupees
+
+wrote evidence/roundtrip_numbers.md
