@@ -39,6 +39,8 @@ a runnable one-file reproduction and captured output.
 
 ## Links to post (tag AssemblyAI)
 
+> Finalized, ready-to-paste LinkedIn + X posts are in [POSTS.md](POSTS.md).
+
 - LinkedIn / X draft: *"For the @AssemblyAI TTS hackathon I audited their new, undocumented
   streaming TTS WebSocket — and proved the bugs by round-trip (synthesize text, then transcribe
   it back with AssemblyAI's own STT). The API speaks Indian ₹ amounts as gibberish: 2,00,000
