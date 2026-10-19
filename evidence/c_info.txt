@@ -1,0 +1,23 @@
+
+--- C1 unknown-STRING voice override ---
+  2022ms Begin {"id":"1a7fbd4f-5df5-47cb-ab7d-d04de55ae466","expires_at":1792440436,"configuration":{"voice":"jane","language":"english","sample_rate":24000,"encoding":"pcm_s16le","inactivity_timeout":null,"word_boundaries":true,"voice…
+  3265ms FlushDone {"flush_id":0,"audio_duration_ms":2000}
+  3265ms WordBoundaries {"flush_id":0,"audio_start_ms":0,"words":[{"word":"unknown","start":183,"end":550,"confidence":0.8925073146820068},{"word":"voice","start":683,"end":800,"confidence":0.6823371648788452},{"word":"string","start":866,"end"…
+  5326ms Termination {"session_duration_seconds":3,"total_input_char_length":25,"audio_duration_seconds":2}
+  5652ms _close {"code":1000,"reason":"Session ended"}
+  [audio 25 chunks]
+
+--- C2 english voice on french turn ---
+  955ms Begin {"id":"b0cddfeb-83ae-4be5-aaa3-f19c28a65af1","expires_at":1792440447,"configuration":{"voice":"jane","language":"english","sample_rate":24000,"encoding":"pcm_s16le","inactivity_timeout":null,"word_boundaries":true,"voice…
+  2245ms FlushDone {"flush_id":0,"audio_duration_ms":2240}
+  2245ms WordBoundaries {"flush_id":0,"audio_start_ms":0,"words":[{"word":"Bonjour","start":448,"end":879,"confidence":0.3831576704978943},{"word":"tout","start":1111,"end":1377,"confidence":0.33284398913383484},{"word":"le","start":1443,"end":…
+  4769ms Termination {"session_duration_seconds":3,"total_input_char_length":21,"audio_duration_seconds":2.24}
+  5079ms _close {"code":1000,"reason":"Session ended"}
+  [audio 28 chunks]
+
+--- C3 voice_clone=true handshake ---
+  Begin/err: 928ms Error {"error_code":3006,"error":"Bad connection parameters: voice: must not be set together with voice_clone=true — the session's voice comes from the VoiceReference clip"}
+  928ms Error {"error_code":3006,"error":"Bad connection parameters: voice: must not be set together with voice_clone=true — the session's voice comes from the VoiceReference clip"}
+
+--- C4 lone KeepAlive ---
+  871ms Begin {"id":"ec2fe67d-5229-45c0-b14a-ac8493601e42","expires_at":1792440465,"configuration":{"voice":"jane","language":"english","sample_rate":24000,"encoding":"pcm_s16le","inactivity_timeout":null,"word_boundaries":true,"voice…

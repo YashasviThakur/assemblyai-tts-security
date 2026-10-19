@@ -1,0 +1,31 @@
+
+--- C5 voice_clone=true (no voice, no clip) ---
+  2366ms Error {"error_code":3006,"error":"Voice cloning is not enabled on this deployment."}
+
+######## BATTERY E — normalization / 'does it say what's written' ########
+
+[otp_currency] "Your OTP is 4096 and your balance is $1,234.56."
+  audio_ms=6640  pcm=318720B (6.64s)  min_word_conf=0.41
+  WordBoundaries tokens: ["Your","OTP","is","4096","and","your","balance","is","$1,234.56."]
+
+[email_time] "Email me at test.user+tag@sub.example.co.uk by 5:30 PM."
+  audio_ms=6320  pcm=303360B (6.32s)  min_word_conf=0.52
+  WordBoundaries tokens: ["Email","me","at","test.user+tag@sub.example.co.uk","by","5:30","PM."]
+
+[phone_url] "Call +1 (415) 555-0137 or visit https://assemblyai.com/docs."
+  audio_ms=9840  pcm=472320B (9.84s)  min_word_conf=0.34
+  WordBoundaries tokens: ["Call","+1","(415)","555-0137","or","visit","https://assemblyai.com/docs."]
+
+[date_abbrev] "The meeting is on 10/11/2026 re: Q4 — see fig. 2(a)."
+  audio_ms=5760  pcm=276480B (5.76s)  min_word_conf=1.00
+  WordBoundaries tokens: []
+
+[indian_units] "He paid Rs 2,00,000 for 3kg at 25 degrees C."
+  audio_ms=4400  pcm=211200B (4.40s)  min_word_conf=0.00
+  WordBoundaries tokens: ["He","paid","Rs","2,00,000","for","3kg","at","25","degrees","C."]
+
+[symbols] "AI/ML & R&D cost ~50%, didn't it? Section 3.1(b)."
+  audio_ms=5120  pcm=245760B (5.12s)  min_word_conf=0.19
+  WordBoundaries tokens: ["AI/ML","R&D","cost","~50%,","didn't","it?","Section","3.1(b)."]
+
+WAVs written to evidence/wav/ — listen to confirm spoken form vs text.

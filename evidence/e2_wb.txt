@@ -1,0 +1,10 @@
+WordBoundaries bisection (words count per utterance):
+  words=6            audio_ms=2320   "The meeting is on October eleventh."
+  words=5            audio_ms=3200   "The meeting is on 10/11/2026."
+  words=2            audio_ms=1920   "re: Q4."
+  words=3            audio_ms=1680   "Q4 — see fig."
+  words=3            audio_ms=1920   "see fig. 2(a)."
+  words=2            audio_ms=1520   "a — b."
+  words=2            audio_ms=1600   "a - b."
+  words=10           audio_ms=5840   "The meeting is on 10/11/2026 re: Q4 — see fig. 2(a)."
+  words=NO-WB-FRAME  audio_ms=5760   "The meeting is on 10/11/2026 re: Q4 , see fig. 2(a)."

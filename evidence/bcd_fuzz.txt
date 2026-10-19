@@ -1,0 +1,148 @@
+######## BATTERY B — input validation / type confusion ########
+
+--- B1 text=number ---
+  2291ms Begin {"id":"b62c7beb-b154-43db-9b48-97fbfe0d9a2a","expires_at":1792440085,"configuration":{"voice":"jane","language":"english","sample_rate":24000,"encoding":"pcm_s16le","inactivity_timeout":null,"word_boundaries":true,"voice…
+  2668ms Error {"error_code":3006,"error":"Invalid message: Generate.text: Input should be a valid string"}
+  2971ms _close {"code":3006,"reason":"See Error message for details"}
+  [audio 0 chunks / 0B]
+
+--- B2 text=array ---
+  1523ms Begin {"id":"bb5bd558-1dcc-4830-a8cb-a0ccde360521","expires_at":1792440090,"configuration":{"voice":"jane","language":"english","sample_rate":24000,"encoding":"pcm_s16le","inactivity_timeout":null,"word_boundaries":true,"voice…
+  1905ms Error {"error_code":3006,"error":"Invalid message: Generate.text: Input should be a valid string"}
+  2204ms _close {"code":3006,"reason":"See Error message for details"}
+  [audio 0 chunks / 0B]
+
+--- B3 text=object ---
+  1125ms Begin {"id":"c0111474-1421-4124-9d62-1d3db510287d","expires_at":1792440097,"configuration":{"voice":"jane","language":"english","sample_rate":24000,"encoding":"pcm_s16le","inactivity_timeout":null,"word_boundaries":true,"voice…
+  1500ms Error {"error_code":3006,"error":"Invalid message: Generate.text: Input should be a valid string"}
+  1807ms _close {"code":3006,"reason":"See Error message for details"}
+  [audio 0 chunks / 0B]
+
+--- B4 text=empty ---
+  1059ms Begin {"id":"69622e7f-36a4-4b58-a9f6-2342e62de3b4","expires_at":1792440103,"configuration":{"voice":"jane","language":"english","sample_rate":24000,"encoding":"pcm_s16le","inactivity_timeout":null,"word_boundaries":true,"voice…
+  1366ms FlushDone {"flush_id":0,"audio_duration_ms":0}
+  3999ms Termination {"session_duration_seconds":2,"total_input_char_length":0,"audio_duration_seconds":0}
+  4301ms _close {"code":1000,"reason":"Session ended"}
+  [audio 0 chunks / 0B]
+
+--- B5 text=whitespace ---
+  1015ms Begin {"id":"a4163b60-4901-4cd8-8181-be81f6e80d7d","expires_at":1792440109,"configuration":{"voice":"jane","language":"english","sample_rate":24000,"encoding":"pcm_s16le","inactivity_timeout":null,"word_boundaries":true,"voice…
+  1450ms FlushDone {"flush_id":0,"audio_duration_ms":0}
+  3865ms Termination {"session_duration_seconds":2,"total_input_char_length":5,"audio_duration_seconds":0}
+  4152ms _close {"code":1000,"reason":"Session ended"}
+  [audio 0 chunks / 0B]
+  (3009 cap hit, backing off 35s before B6 text=2000 chars)
+
+--- B6 text=2000 chars ---
+  1315ms Begin {"id":"1ed9637d-6f88-4dff-9c61-3092ba616dac","expires_at":1792440152,"configuration":{"voice":"jane","language":"english","sample_rate":24000,"encoding":"pcm_s16le","inactivity_timeout":null,"word_boundaries":true,"voice…
+  [audio 1934 chunks / 7426560B]
+
+--- B7 text=2001 chars ---
+  1517ms Begin {"id":"75e4f6b2-b305-4c7d-aa59-2ad945e406e3","expires_at":1792440167,"configuration":{"voice":"jane","language":"english","sample_rate":24000,"encoding":"pcm_s16le","inactivity_timeout":null,"word_boundaries":true,"voice…
+  1888ms Error {"error_code":3006,"error":"Generate text is 2001 characters, over the 2000-character limit. Split it across multiple Generate messages (and Flush at sentence boundaries) instead of sending it all at once."}
+  2220ms _close {"code":3006,"reason":"See Error message for details"}
+  [audio 0 chunks / 0B]
+
+--- B8 text=null-byte ---
+  1168ms Begin {"id":"60e0ca05-dfa4-42c5-9290-86375ff20c76","expires_at":1792440173,"configuration":{"voice":"jane","language":"english","sample_rate":24000,"encoding":"pcm_s16le","inactivity_timeout":null,"word_boundaries":true,"voice…
+  4474ms FlushDone {"flush_id":0,"audio_duration_ms":1360}
+  4474ms WordBoundaries {"flush_id":0,"audio_start_ms":0,"words":[{"word":"alpha\u0000omega","start":289,"end":1088,"confidence":0.4659534990787506}]}
+  5498ms Termination {"session_duration_seconds":4,"total_input_char_length":11,"audio_duration_seconds":1.36}
+  5790ms _close {"code":1000,"reason":"Session ended"}
+  [audio 17 chunks / 65280B]
+
+--- B9 text=control+ansi ---
+  933ms Begin {"id":"af2d8867-7703-4f64-b7c8-4519d5d99d35","expires_at":1792440181,"configuration":{"voice":"jane","language":"english","sample_rate":24000,"encoding":"pcm_s16le","inactivity_timeout":null,"word_boundaries":true,"voice…
+  2427ms FlushDone {"flush_id":0,"audio_duration_ms":2480}
+  2427ms WordBoundaries {"flush_id":0,"audio_start_ms":0,"words":[{"word":"red\u001b[31mtext\u0007bell","start":264,"end":1884,"confidence":0.6153465509414673},{"word":"tab","start":2017,"end":2347,"confidence":0.3999454975128174}]}
+  5219ms Termination {"session_duration_seconds":4,"total_input_char_length":21,"audio_duration_seconds":2.48}
+  5500ms _close {"code":1000,"reason":"Session ended"}
+  [audio 31 chunks / 119040B]
+
+--- B10 extra unknown field ---
+  1436ms Begin {"id":"460f77d6-b6d0-4d33-884a-62ba164a67bd","expires_at":1792440189,"configuration":{"voice":"jane","language":"english","sample_rate":24000,"encoding":"pcm_s16le","inactivity_timeout":null,"word_boundaries":true,"voice…
+  2541ms FlushDone {"flush_id":0,"audio_duration_ms":1120}
+  2541ms WordBoundaries {"flush_id":0,"audio_start_ms":0,"words":[{"word":"hello","start":206,"end":465,"confidence":0.7092990279197693},{"word":"there","start":568,"end":740,"confidence":0.9447441697120667}]}
+  5741ms Termination {"session_duration_seconds":4,"total_input_char_length":11,"audio_duration_seconds":1.12}
+  6031ms _close {"code":1000,"reason":"Session ended"}
+  [audio 14 chunks / 53760B]
+
+--- B11 voice override=number ---
+  1552ms Begin {"id":"a4ea52a2-7251-4c56-b515-ac50d7cd3473","expires_at":1792440197,"configuration":{"voice":"jane","language":"english","sample_rate":24000,"encoding":"pcm_s16le","inactivity_timeout":null,"word_boundaries":true,"voice…
+  2747ms FlushDone {"flush_id":0,"audio_duration_ms":1680}
+  2747ms WordBoundaries {"flush_id":0,"audio_start_ms":0,"words":[{"word":"voice","start":369,"end":571,"confidence":0.9526209831237793},{"word":"as","start":856,"end":907,"confidence":0.9989396333694458},{"word":"number","start":1024,"end":131…
+  5115ms Termination {"session_duration_seconds":3,"total_input_char_length":15,"audio_duration_seconds":1.68}
+  6039ms _close {"code":1000,"reason":"Session ended"}
+  [audio 21 chunks / 80640B]
+
+--- B12 type lowercase 'generate' ---
+  1066ms Begin {"id":"d1920631-964c-40a1-b8ba-af4ba887dec9","expires_at":1792440205,"configuration":{"voice":"jane","language":"english","sample_rate":24000,"encoding":"pcm_s16le","inactivity_timeout":null,"word_boundaries":true,"voice…
+  1349ms Error {"error_code":3006,"error":"Invalid message: unknown message type 'generate'; expected one of 'Generate', 'Flush', 'Terminate', 'KeepAlive', 'Cancel', 'VoiceReference'"}
+  1653ms _close {"code":3006,"reason":"See Error message for details"}
+  [audio 0 chunks / 0B]
+
+--- B13 nested JSON in text ---
+  1086ms Begin {"id":"af8c414c-52f2-4d6b-936d-263c9adab8b7","expires_at":1792440211,"configuration":{"voice":"jane","language":"english","sample_rate":24000,"encoding":"pcm_s16le","inactivity_timeout":null,"word_boundaries":true,"voice…
+  2587ms FlushDone {"flush_id":0,"audio_duration_ms":2560}
+  2587ms WordBoundaries {"flush_id":0,"audio_start_ms":0,"words":[{"word":"{\"type\":\"Terminate\"}","start":33,"end":2526,"confidence":0.6488977670669556}]}
+  5403ms Termination {"session_duration_seconds":4,"total_input_char_length":20,"audio_duration_seconds":2.56}
+  6444ms _close {"code":1000,"reason":"Session ended"}
+  [audio 32 chunks / 122880B]
+
+######## BATTERY D — protocol state machine ########
+  (3009 cap hit, backing off 35s before D1 Flush with empty buffer)
+
+--- D1 Flush with empty buffer ---
+  1034ms Begin {"id":"bc337737-060a-4eaa-8ea7-3e218b67cfd1","expires_at":1792440255,"configuration":{"voice":"jane","language":"english","sample_rate":24000,"encoding":"pcm_s16le","inactivity_timeout":null,"word_boundaries":true,"voice…
+  1318ms FlushDone {"flush_id":0,"audio_duration_ms":0}
+  3888ms Termination {"session_duration_seconds":2,"total_input_char_length":0,"audio_duration_seconds":0}
+  4182ms _close {"code":1000,"reason":"Session ended"}
+  [audio 0 chunks / 0B]
+
+--- D2 Flush x3 empty ---
+  996ms Begin {"id":"ba0177d4-6c30-4878-8d4f-2822ec5a7856","expires_at":1792440262,"configuration":{"voice":"jane","language":"english","sample_rate":24000,"encoding":"pcm_s16le","inactivity_timeout":null,"word_boundaries":true,"voice…
+  1276ms FlushDone {"flush_id":0,"audio_duration_ms":0}
+  1283ms FlushDone {"flush_id":1,"audio_duration_ms":0}
+  1283ms FlushDone {"flush_id":2,"audio_duration_ms":0}
+  3859ms Termination {"session_duration_seconds":2,"total_input_char_length":0,"audio_duration_seconds":0}
+  4142ms _close {"code":1000,"reason":"Session ended"}
+  [audio 0 chunks / 0B]
+
+--- D3 client-supplied flush_id ---
+  1039ms Begin {"id":"6e466f6e-3fb4-4b34-9ee0-fe865b265b2f","expires_at":1792440268,"configuration":{"voice":"jane","language":"english","sample_rate":24000,"encoding":"pcm_s16le","inactivity_timeout":null,"word_boundaries":true,"voice…
+  1979ms FlushDone {"flush_id":0,"audio_duration_ms":1040}
+  1979ms WordBoundaries {"flush_id":0,"audio_start_ms":0,"words":[{"word":"spoof","start":138,"end":485,"confidence":0.8897455930709839},{"word":"id","start":641,"end":918,"confidence":0.918083906173706}]}
+  5324ms Termination {"session_duration_seconds":4,"total_input_char_length":8,"audio_duration_seconds":1.04}
+  5696ms _close {"code":1000,"reason":"Session ended"}
+  [audio 13 chunks / 49920B]
+
+--- D4 Generate after Terminate ---
+  985ms Begin {"id":"523f83be-2793-471e-9c27-c6976e9b2ff3","expires_at":1792440276,"configuration":{"voice":"jane","language":"english","sample_rate":24000,"encoding":"pcm_s16le","inactivity_timeout":null,"word_boundaries":true,"voice…
+  1286ms Termination {"session_duration_seconds":0,"total_input_char_length":0,"audio_duration_seconds":0}
+  1612ms _close {"code":1000,"reason":"Session ended"}
+  [audio 0 chunks / 0B]
+
+--- D5 double Terminate ---
+  1050ms Begin {"id":"90fd4768-04d4-46c0-ac8a-9757929d520c","expires_at":1792440282,"configuration":{"voice":"jane","language":"english","sample_rate":24000,"encoding":"pcm_s16le","inactivity_timeout":null,"word_boundaries":true,"voice…
+  1360ms Termination {"session_duration_seconds":0,"total_input_char_length":0,"audio_duration_seconds":0}
+  1729ms _close {"code":1000,"reason":"Session ended"}
+  [audio 0 chunks / 0B]
+  (3009 cap hit, backing off 35s before D6 unknown top-level type)
+
+--- D6 unknown top-level type ---
+  1030ms Begin {"id":"b17fb03d-61e3-4657-9e25-a65a1ed5e2e0","expires_at":1792440324,"configuration":{"voice":"jane","language":"english","sample_rate":24000,"encoding":"pcm_s16le","inactivity_timeout":null,"word_boundaries":true,"voice…
+  1387ms Error {"error_code":3006,"error":"Invalid message: unknown message type 'Describe'; expected one of 'Generate', 'Flush', 'Terminate', 'KeepAlive', 'Cancel', 'VoiceReference'"}
+  1680ms _close {"code":3006,"reason":"See Error message for details"}
+  [audio 0 chunks / 0B]
+
+--- D7 no type field ---
+  1141ms Begin {"id":"4dece5fa-840f-416f-8831-7fa3ba3beb3c","expires_at":1792440330,"configuration":{"voice":"jane","language":"english","sample_rate":24000,"encoding":"pcm_s16le","inactivity_timeout":null,"word_boundaries":true,"voice…
+  1510ms Error {"error_code":3006,"error":"Missing 'type' field"}
+  1887ms _close {"code":3006,"reason":"See Error message for details"}
+  [audio 0 chunks / 0B]
+
+--- D8 non-JSON frame ---
+  1046ms Begin {"id":"86bb69f7-ee5a-49f0-9e5e-2bf4f6315f4a","expires_at":1792440336,"configuration":{"voice":"jane","language":"english","sample_rate":24000,"encoding":"pcm_s16le","inactivity_timeout":null,"word_boundaries":true,"voice…
+  1394ms Error {"error_code":3006,"error":"Invalid JSON: Expecting value: line 1 column 1 (char 0)"}
+  1680ms _close {"code":3006,"reason":"See Error message for details"}
+  [audio 0 chunks / 0B]

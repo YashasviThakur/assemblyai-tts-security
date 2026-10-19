@@ -1,0 +1,15 @@
+
+=== A1b Generate(no Flush) then Terminate ===
+  2181ms Begin {"id":"a62831bb-e8b0-4d64-9316-04d58bd2e293","expires_at":1792439978,"configuration":{"voice":"jane","language":"english","sample_rate":24000,"encoding":"pcm_s16le","inactivity_timeout":null,"word_boundaries":true,"voice…
+  5671ms FlushDone {"flush_id":0,"audio_duration_ms":3520}
+  5671ms WordBoundaries {"flush_id":0,"audio_start_ms":0,"words":[{"word":"This","start":507,"end":622,"confidence":0.9000731110572815},{"word":"text","start":687,"end":1047,"confidence":0.8465789556503296},{"word":"was","start":1096,"end":1195…
+  5671ms Termination {"session_duration_seconds":2,"total_input_char_length":55,"audio_duration_seconds":3.52}
+  5675ms _close {"code":1000,"reason":"Session ended"}
+A1b> audio chunks BEFORE Terminate=0; AFTER=44; billed_seconds=3.52; billed_chars=55
+
+=== A1c Generate(no Flush) -> Cancel -> Terminate ===
+  993ms Begin {"id":"6557a3e1-40f1-459b-9a29-7b9e6be403e5","expires_at":1792439985,"configuration":{"voice":"jane","language":"english","sample_rate":24000,"encoding":"pcm_s16le","inactivity_timeout":null,"word_boundaries":true,"voice…
+  1597ms Cancelled {"audio_duration_seconds":0}
+  3503ms Termination {"session_duration_seconds":2,"total_input_char_length":75,"audio_duration_seconds":0}
+  3873ms _close {"code":1000,"reason":"Session ended"}
+A1c> audio chunks after Cancel=0; total=0; billed_seconds=0; billed_chars=75

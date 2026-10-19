@@ -1,0 +1,18 @@
+
+comma-variant: "The meeting is on 10/11/2026 re: Q4 , see fig. 2(a)."
+  run 1: 10 words           audio_ms=6080
+  run 2: 10 words           audio_ms=5840
+  run 3: 10 words           audio_ms=6960
+  run 4: 10 words           audio_ms=6080
+  run 5: 10 words           audio_ms=5680
+  run 6: 10 words           audio_ms=6320
+  TALLY comma-variant: {"10 words":6}
+
+emdash-variant: "The meeting is on 10/11/2026 re: Q4 — see fig. 2(a)."
+  run 1: 10 words           audio_ms=6480
+  run 2: NO-WordBoundaries  audio_ms=5760
+  run 3: 10 words           audio_ms=6000
+  run 4: 10 words           audio_ms=6240
+  run 5: 10 words           audio_ms=7760
+  run 6: 10 words           audio_ms=6000
+  TALLY emdash-variant: {"10 words":5,"NO-WordBoundaries":1}
